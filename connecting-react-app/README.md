@@ -144,6 +144,8 @@ app.get('/countries/:countryCode', (req, res) => {
 
 Now in the CountryDetail.js component we add the state and a get request to the server.
 
+The country in the state we set to the initial value of null.
+
 ```js
 // src/components/CountryDetail.js
 //
@@ -242,3 +244,11 @@ componentDidUpdate(prevProps) {
 }
 //
 ```
+
+If we now change the initial value of the country in the state to {} then we get an error -> country.name is not defined.
+
+The problem is that the check in the render method that is checking for state.country to be false does not work with empty object. 
+
+So then the rendering of the country.name etc is tried on {} and that results in an error. That's what the check on line 40 in CountryDetail.js is for -> to make sure that we don't render without having the correct data in the state. 
+
+This illustrates that the render method gets executed before the componentDidMount(). When the render get's executed the first time the fetching of the data did not take place yet because that is only triggered when componentDidMount() gets executed. 
